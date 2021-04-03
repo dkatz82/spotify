@@ -1,11 +1,11 @@
 const express = require('express');
 const router = express.Router();
-const Madness = require('../models/madness');
+const Playlist = require('../models/playlist');
 
 //get the list of all playlists from the database
 router.get('/playlists',function(req,res,next){
   //this gets all the playlists because the find function is fed no filters.
-  Madness.find({}).then(function(playlists){
+  Playlist.find({}).then(function(playlists){
     res.send(playlists);
   });
 
@@ -15,7 +15,7 @@ router.get('/playlists',function(req,res,next){
 router.post('/playlists',function(req,res,next){
   //console.log(req.body);
   //creates and saves the new playlist in the database
-  Madness.create(req.body).then(function(playlist){
+  Playlist.create(req.body).then(function(playlist){
     //return the saved playlist from the database
     res.send(playlist);
   }).catch(next);
@@ -25,8 +25,8 @@ router.post('/playlists',function(req,res,next){
 //update a playlist which is already in the list of all playlists from the database
 router.put('/playlists/:id',function(req,res,next){
 
-  Madness.findByIdAndUpdate({_id:req.params.id},req.body).then(function(){
-    Madness.findOne({_id:req.params.id}).then(function(playlist){
+  Playlist.findByIdAndUpdate({_id:req.params.id},req.body).then(function(){
+    Playlist.findOne({_id:req.params.id}).then(function(playlist){
       res.send(playlist);
     });
   });
@@ -36,10 +36,10 @@ router.put('/playlists/:id',function(req,res,next){
 //delete a playlist which is already in the list of all playlists from the database
 router.delete('/playlists/:id',function(req,res,next){
     if (req.params.id == "deleteall"){
-      Madness.find({}).then(function(playlists){
+      Playlist.find({}).then(function(playlists){
         for (playlist of playlists){
           //console.log(playlist._id);
-          Madness.findByIdAndRemove({_id:playlist._id}).then(function(playlist){
+          Playlist.findByIdAndRemove({_id:playlist._id}).then(function(playlist){
             //console.log(playlist);
           });
         }
@@ -48,7 +48,7 @@ router.delete('/playlists/:id',function(req,res,next){
 
     }
     else{
-      Madness.findByIdAndRemove({_id:req.params.id}).then(function(playlist){
+      Playlist.findByIdAndRemove({_id:req.params.id}).then(function(playlist){
         res.send(playlist);
       });
     }
